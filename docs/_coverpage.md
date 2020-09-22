@@ -1,8 +1,8 @@
-<img src="./pics/bird.jpg">
+<img src="./pics/cover.jpg">
 
 # 练手项目
 
 - 好用
 - 又快哈哈
 
-[doit](./page/first)
+[Start](./page/first)

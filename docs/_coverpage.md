@@ -1,8 +1,8 @@
-<img src="./pics/cover.jpg">
+<img src="./pics/bird.jpg">
 
 # 练手项目
 
-- 好用
-- 又快哈哈
+- Coding it
+- Comfortable
 
-[Start](./page/first)
+[Start](./Coding/LeetCode每日刷题)

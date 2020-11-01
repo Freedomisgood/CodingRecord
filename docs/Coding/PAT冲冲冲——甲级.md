@@ -5146,6 +5146,73 @@ int main(){
 
 
 
+### 1110 [Complete Binary Tree](https://pintia.cn/problem-sets/994805342720868352/problems/994805359372255232)
+
+> 二叉树的静态写法 + 完全二叉树定义
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+const int INF = 0x3f3f3f3f;
+int n;
+const int maxn = 20 + 5;
+
+struct Node{
+    int l, r;
+}arr[maxn];
+
+// 记录最大的下标
+int MAX = -1;
+// 记录最后一个节点
+int ans;
+
+void dfs(int root, int idx){
+    if ( idx > MAX){
+        ans = root;
+        MAX = idx;
+    }
+    // 按下标递归遍历
+    if ( arr[root].l != -1) dfs(arr[root].l, 2*idx + 1);
+    if ( arr[root].r != -1) dfs(arr[root].r, 2*idx + 2);
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    cin >> n;
+    string l, r;
+    vector<bool> notFather(n, false);
+    for (int i = 0; i < n; i++) {
+       cin >> l >> r;
+       if ( l == "-"){
+           arr[i].l = -1;
+       }else{
+           arr[i].l = stoi(l);
+           notFather[stoi(l)] = true;
+       }
+       if ( r == "-"){
+           arr[i].r = -1;
+       }else{
+           arr[i].r = stoi(r);
+           notFather[stoi(r)] = true;
+       }
+    }
+    // 找到根节点
+    int root = 0;
+    while( notFather[root] == true) root++;
+    dfs(root, 0);
+    
+    if (MAX == n - 1) cout << "YES " << ans << endl;
+    else cout << "NO " << root << endl;
+    return 0;   
+}
+```
+
+
+
+
+
 ### [1113 Integer Set Partition](https://pintia.cn/problem-sets/994805342720868352/problems/994805357258326016)
 
 > 大水题

@@ -1366,3 +1366,323 @@ public:
 
 > 又是一道困难题, 决定等DP专题的时候再来补这题
 
+
+
+刷道复习面经时候看的题： [93. 复原IP地址](https://leetcode-cn.com/problems/restore-ip-addresses/)
+
+```cpp
+
+class Solution {
+private:
+    vector<string> ans;
+    
+public:
+    vector<string> restoreIpAddresses(string s) {
+        if ( s.size() > 12 ) return {};
+        // 第一个dot不可能在首位
+        BackTracking(s, 0, 1);
+        return ans;
+    }
+
+
+    // 当前string, 已有dot数, dot位置
+    void BackTracking(string s, int dot_num, int dot_position){
+        if( dot_num == 3){
+            if ( islegalIP(s) ){
+                ans.push_back(s);
+            }
+            return ;
+        }
+        //
+        for (int i = dot_position; i < s.size(); i++) {
+           s.insert(i, ".");
+           // dot不可能连续， 需要为 + 2
+           BackTracking(s, dot_num + 1, i + 2);
+           // 从i位置删除一个字符
+           s.erase(i, 1);
+        }
+    }
+    
+    bool islegalIP(string s){
+        if ( s.size() > 12 + 3) return false;
+        for (int i = 0; i < s.size(); i++) {
+            // 遇到.前的数
+            int tmp = 0;
+            // 起点
+            int j = i;
+            while( i < s.size() && s[i] != '.'){
+                tmp = tmp * 10 + s[i++] - '0' ;
+                if( tmp > 255) return false;
+            }
+            // 不用+1, 因为此时i在dot的位置
+            int delta = i - j;
+            // 去前导0的情况
+            if ( delta > 3 || ( delta == 3 && tmp < 100 ) || (delta == 2 && tmp < 10)){
+                return false;
+            }
+        }
+        return true;    
+    }
+};
+
+```
+
+
+
+
+
+## 2020年11月2日
+
+### [349. 两个数组的交集](https://leetcode-cn.com/problems/intersection-of-two-arrays/)
+
+```cpp
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> ans;
+        unordered_set<int> s;		// 帮助统计数是否在ans中出现过
+        for (int i = 0; i < nums1.size(); i++) {
+           vector<int>::iterator it = find(nums2.begin(), nums2.end(), nums1[i]);
+           if ( it != nums2.end()){	// 判断该元素是否在nums2中也出现过
+               if ( s.find(nums1[i]) == s.end() ){
+                   s.insert(nums1[i]);
+                   ans.push_back(nums1[i]);
+               }
+           }
+        }
+        return ans;
+    }
+};
+
+
+// 纯使用STL algorithm破题
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        if( nums1.empty() || nums2.empty() ) return {};
+        set<int> s1(nums1.begin(), nums1.end());
+        set<int> s2(nums2.begin(), nums2.end());
+        set<int> C;
+        set_intersection(s1.begin(),s1.end(),s2.begin(),s2.end(),inserter( C , C.begin() ) );    /*取并集运算*/
+        
+        vector<int> ans(C.begin(), C.end());
+        return ans;
+    }
+};
+```
+
+注意:
+
+- set_intersection不能对unordered_set使用, 效果不正常
+- `set<int> s1(nums1.begin(), nums1.end());`根据STL容器生成STL容器是可行的
+
+## 2020年11月3日
+
+### [941. 有效的山脉数组](https://leetcode-cn.com/problems/valid-mountain-array/)
+
+```cpp
+// 自己写的版本, 写的比较丑
+class Solution {
+public:
+    bool validMountainArray(vector<int>& A) {
+        if ( A.size() < 3 ) return false;
+        int len = A.size();
+        bool up2low = true;		// 记录是否有上坡到下坡的转变过程
+        int changeTime = 0;		// 记录是否全升或全降
+        for (int i = 1; i < len; i++) {
+           int  j = i - 1;
+           if (A[i] == A[j] ) return false;		// 如果出现相等, 根据定义必不是
+           if ( A[i] < A[j] ){					// 出现了下坡
+               up2low = false;
+               changeTime +=  1;
+           }
+            // 如果已经是下坡了, 还出现上坡的情况, 则false
+           if ( up2low == false && A[i] > A[j]) return false;
+        }
+		
+        // 1. 如果没出现过下坡; 2.如果没出现过上坡
+        return changeTime > 0 && changeTime != A.size() - 1;
+    }
+};
+
+// 题解
+class Solution {
+public:
+    bool validMountainArray(vector<int>& A) {
+        int N = A.size();
+        int i = 0;
+
+        // 递增扫描
+        while (i + 1 < N && A[i] < A[i + 1]) {
+            i++;
+        }
+
+        // 最高点不能是数组的第一个位置或最后一个位置
+        if (i == 0 || i == N - 1) {
+            return false;
+        }
+
+        // 递减扫描
+        while (i + 1 < N && A[i] > A[i + 1]) {
+            i++;
+        }
+
+        return i == N - 1;
+    }
+};
+
+
+// 比较美观的写法-双指针形式, 实际跟一个for一样
+class Solution {
+public:
+    bool validMountainArray(vector<int>& A) {
+        if ( A.size() < 3 ) return false;
+        int len = A.size();
+        int i = 0, j = len - 1;
+        while( i+1 < len && A[i+1] > A[i] ){
+            i ++;
+        }
+        while( j -1 > 0 && A[j-1] > A[j]){
+            j --;
+        }
+        // 1. 如果是山脉数组, 则i和j都需要移动, 避免单调情况
+        // 2. 山脉数组要求一个峰值, 即i==j
+        return  i != 0 && j != len -1 && i == j ;
+    }
+};
+```
+
+## 2020年11月4日
+
+### [57. 插入区间](https://leetcode-cn.com/problems/insert-interval/)——困难
+
+
+
+## 2020年11月5日
+
+### [127. 单词接龙](https://leetcode-cn.com/problems/word-ladder/)
+
+所以这道题要解决两个问题：
+
+- 图中的线是如何连在一起的
+- 起点和终点的最短路径长度
+
+```cpp
+// 比较直观的BFS
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> s( wordList.begin(), wordList.end() );
+        if ( s.find(endWord) == s.end() ) return 0;
+        int times = 0;
+        int wordLen = beginWord.size();
+
+        unordered_set<string> visited;      // 判断是否已经遍历过
+        queue<string> q;
+        q.push(beginWord);
+        visited.insert(beginWord);
+        while( !q.empty() ){
+            times += 1;
+            int qlen = q.size();						// ▲KeyPoint
+            for (int k = 0; k < qlen; k++) {            // 把该层的节点全部遍历完, 一次for算一次操作
+                string nows = q.front(); q.pop();
+                for (int i = 0; i < wordLen; i++) {
+                    string change = nows;                   // 需要先赋值给一个新变量再修改每一位
+                    for (int j = 0; j < 26; j++) {
+                        change[i] = j + 'a';                // 修改某一位
+                        if ( nows == endWord ) return times;// 如果是的话就直接返回当前操作次数
+                        // 需要没访问过, 且在wordList中
+                        if ( s.find(change) != s.end() && visited.find(change) == visited.end() ){     
+                            q.push(change);
+                            // 插入标记已访问过
+                            visited.insert(change);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+};
+```
+
+▲ 遍历某一层节点时, 竟然忘记存储了, 懵逼到怀疑自己会不会BFS....切记一定要把q.size()赋值给一个变量, 不然for时每一次的q.size()都是不一样的
+
+
+
+
+
+
+
+## 2020年11月6日
+
+### [1356. 根据数字二进制下 1 的数目排序](https://leetcode-cn.com/problems/sort-integers-by-the-number-of-1-bits/)
+
+```cpp
+typedef pair<int, int> pp;
+
+class Solution {
+private:
+    int getOneNumber(int n){
+        int ans = 0;
+        while(n){
+            if (n & 1) ans += 1;
+            n >>= 1;
+        }
+        return ans;
+    }
+    
+public:
+    vector<int> sortByBits(vector<int>& arr) {
+        if( arr.empty() )return{};
+        priority_queue< pp, vector< pp >, greater< pp >  >q;
+        for (auto &x: arr) {
+           q.push( make_pair(getOneNumber(x), x) );
+        }
+
+        vector<int> ans;
+        while(!q.empty()){
+            ans.push_back(q.top().second); q.pop();
+        }
+        return ans;
+    }
+
+};
+
+
+// 题解
+class Solution {
+public:
+    vector<int> sortByBits(vector<int>& arr) {
+        vector<int> bit(10001, 0);
+        for (int i = 1;i <= 10000; ++i) {
+            bit[i] = bit[i>>1] + (i & 1);
+        }
+        // 匿名函数写法
+        sort(arr.begin(),arr.end(),[&](int x,int y){
+            if (bit[x] < bit[y]) {
+                return true;
+            }
+            if (bit[x] > bit[y]) {
+                return false;
+            }
+            return x < y;
+        });
+        return arr;
+    }
+};
+```
+
+此外统计二进制中1的个数还可以用判断是否为2的幂的方法
+
+```cpp
+int bitCount(int n) {
+    int count = 0;
+    while (n) {
+        n &= (n - 1); // 清除最低位的1
+        count++;
+    }
+    return count;
+}
+```
+

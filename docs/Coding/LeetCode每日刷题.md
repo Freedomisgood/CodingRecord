@@ -1686,3 +1686,83 @@ int bitCount(int n) {
 }
 ```
 
+
+
+
+
+## 2020年11月8日
+
+### 股票问题
+
+#### [121. 买卖股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+
+> 找出数组中的最大差值. 暴力O(n2)
+
+```cpp
+// 暴力O(n2) 会TLE
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if ( prices.empty() ) return 0;
+        int len = prices.size();
+        int maxProfit = 0;
+        for (int i = 0; i < len-1; i++) {
+           for (int j = i+1; j < len; j++) {
+               int diff = prices[j] - prices[i];
+              if ( diff > maxProfit){
+                  maxProfit = diff;
+              }
+           }
+        }
+        return maxProfit;
+    }
+};
+
+// 一次遍历,  保存prices最小值
+const int INF = 0x3f3f3f3f;
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if ( prices.empty() ) return 0;
+        int len = prices.size();
+        int minPrice = INF;
+        int maxProfit = 0;
+        for (int i = 0; i < len; i++) {
+            if ( prices[i] < minPrice){
+                minPrice = prices[i];
+            }else if ( prices[i] - minPrice; > maxProfit){
+                maxProfit = prices[i] - minPrice;;
+            }
+        }
+        return maxProfit;
+    }
+};
+
+// 单调栈: 这个题本质就是要求某个数与其右边最大的数的差值，这符合了单调栈的应用场景 当你需要高效率查询某个位置左右两侧比他大（或小）的数的位置的时候，于是我就用单调栈解决了
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int ans = 0;
+        vector<int> St;
+        prices.emplace_back(-1); // 哨兵👨‍✈️
+        for (int i = 0; i < prices.size(); ++ i){
+            // 维护递增栈, 栈底小, 栈顶大, 当遇到小元素入栈时, 将栈顶元素-栈顶元素
+            while (!St.empty() && St.back() > prices[i]){ // 维护单调栈📈
+                ans = std::max(ans, St.back() - St.front()); // 维护最大值
+                St.pop_back();
+            }
+            St.emplace_back(prices[i]);
+        }
+
+        return ans;
+    }
+};
+
+作者：wen-mu-yang
+链接：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/solution/c-li-yong-shao-bing-wei-hu-yi-ge-dan-diao-zhan-tu-/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+#### [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)——dp
+

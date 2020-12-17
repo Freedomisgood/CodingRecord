@@ -6,4 +6,9 @@
 * [蓝桥杯突击训练](Coding/蓝桥杯突击训练.md)
 * [面试经验](faceExp/faceExp.md)
 * [李宏毅机器学习_摘要](ML/李宏毅机器学习-摘要.md)
+* [Lets-learn-设计模式](mode/Lets-learn-设计模式.md)
+* [细品单例模式](mode/细品单例模式.md)
+* [设计模式UML](mode/uml.md)
+
+
 

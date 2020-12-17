@@ -691,6 +691,28 @@ $ jinfo -flag +PrintGCDetails 9308
 
 
 
+
+
+
+
+
+
+
+
+### [python-list, tuple, dictionary, set的底层细节](https://blog.csdn.net/siyue0211/article/details/80560783)
+
+### [python中可哈希对象是个啥？what is hashable object in python?](https://www.cnblogs.com/langqi250/p/10303759.html)
+
+
+
+
+
+
+
+
+
+
+
 ## 算法题记录
 
 ### LeetCode93-复原IP地址
@@ -759,3 +781,18 @@ public:
 ### 5.给你一个[二叉树](https://www.nowcoder.com/jump/super-jump/word?word=二叉树)，求公共的根—— [LCA问题](https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/solution/mian-shi-ti-68-ii-er-cha-shu-de-zui-jin-gong-gon-7/)
 
 ### [三数之和](https://leetcode-cn.com/problems/3sum/solution/san-shu-zhi-he-by-leetcode-solution/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

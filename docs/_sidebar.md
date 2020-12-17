@@ -9,6 +9,7 @@
 * [Lets-learn-设计模式](mode/Lets-learn-设计模式.md)
 * [细品单例模式](mode/细品单例模式.md)
 * [设计模式UML](mode/uml.md)
+* [牛客SQL练习](Coding/牛客SQL练习.md)
 
 
 

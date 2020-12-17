@@ -1,6 +1,6 @@
 <img src="./pics/bird.jpg">
 
-# 练手项目
+# Mrli's Notebooks
 
 - Coding it
 - Comfortable
